@@ -188,17 +188,17 @@ namespace type_lists
     template <TypeList TL, class... Ts>
     struct InitsImpl
     {
-        using Head = FromTuple<type_tuples::TTuple<Ts ...>>;
+        using Head = FromTuple<type_tuples::TTuple<Ts...>>;
         using Tail = InitsImpl<
             typename TL::Tail,
-            Ts ...,
+            Ts...,
             typename TL::Head>;
     };
 
     template <Empty TL, class... Ts>
-    struct InitsImpl<TL, Ts ...>
+    struct InitsImpl<TL, Ts...>
     {
-        using Head = FromTuple<type_tuples::TTuple<Ts ...>>;
+        using Head = FromTuple<type_tuples::TTuple<Ts...>>;
         using Tail = Nil;
     };
 
@@ -263,23 +263,27 @@ namespace type_lists
     using Foldl = typename FoldlImpl<OP, T, TL>::Type;
 
     template <TypeList L, TypeList R>
-    struct Zip2Impl : Nil {};
+    struct Zip2Impl : Nil
+    {
+    };
 
     template <TypeSequence L, TypeSequence R>
-    struct Zip2Impl<L, R> {
+    struct Zip2Impl<L, R>
+    {
         using Head = type_tuples::TTuple<typename L::Head, typename R::Head>;
         using Tail = Zip2Impl<typename L::Tail, typename R::Tail>;
     };
 
     template <TypeList L, TypeList R>
     using Zip2 = Zip2Impl<L, R>;
-    
-    template <TypeList ... TLs>
-    struct ZipImpl {
-        using Head = type_tuples::TTuple<typename TLs::Head ...>;
-        using Tail = ZipImpl<typename TLs::Tail ...>;
+
+    template <TypeList... TLs>
+    struct ZipImpl
+    {
+        using Head = type_tuples::TTuple<typename TLs::Head...>;
+        using Tail = ZipImpl<typename TLs::Tail...>;
     };
 
-    template <TypeList ... TLs>
-    using Zip = ZipImpl<TLs ...>;
+    template <TypeList... TLs>
+    using Zip = ZipImpl<TLs...>;
 } // namespace type_lists
