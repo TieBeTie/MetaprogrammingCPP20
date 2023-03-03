@@ -1,18 +1,24 @@
 #pragma once
 
-template<size_t max_length>
-struct FixedString {
-  FixedString(const char* string, size_t length) : impl(string)  {
-  }
-  operator std::string_view() const;
+#include <string_view>
 
-  std::string impl;
+template <size_t max_length>
+struct FixedString
+{
+  constexpr FixedString(const char *string, size_t length) : len_(length)
+  {
+    std::copy(string, string + length, impl_);
+  }
+  constexpr operator std::string_view() const
+  {
+    return std::string_view(impl_, len_);
+  }
+
+  char impl_[max_length]{0};
+  size_t len_;
 };
 
-  bool operator==(FixedString<256> d, std::string_view str) {
-    return true;
-  }
-
-FixedString<256> operator""_cstr(const char* cstr, size_t len) {
+constexpr FixedString<256> operator""_cstr(const char *cstr, size_t len)
+{
   return FixedString<256>(cstr, len);
- }
+}
